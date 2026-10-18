@@ -111,7 +111,7 @@ export const errorHandler = (err, req, res, _next) => {
   if (pgCode === '23503') return res.status(409).json({ error: { code: 'DELETE_BLOCKED', message: ERRORS.DELETE_BLOCKED[1] } });
   if (pgCode === '23505') return res.status(409).json({ error: { code: 'VALIDATION', message: 'هذه القيمة مستخدمة بالفعل.' } });
   console.error('[error]', req.method, req.originalUrl, err);
-  return res.status(500).json({ error: { code: 'INTERNAL', message: ERRORS.INTERNAL[1] } });
+  return res.status(500).json({ error: { code: 'INTERNAL', message: err.message || ERRORS.INTERNAL[1] } });
 };
 
 export const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);

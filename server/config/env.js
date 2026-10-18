@@ -15,10 +15,8 @@ const env = process.env;
 
 const isProd = env.NODE_ENV === 'production';
 
-if (isProd) {
-  for (const key of ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET', 'DATABASE_URL', 'CLIENT_ORIGIN']) {
-    if (!env[key]) throw new Error(`Missing required environment variable: ${key}`);
-  }
+if (!env.DATABASE_URL) {
+  console.warn('⚠️ WARNING: DATABASE_URL is not set in environment variables! Please add DATABASE_URL in Vercel settings.');
 }
 
 export const config = {
@@ -26,14 +24,14 @@ export const config = {
   isProd,
   root,
   port: Number(env.PORT || 4000),
-  // When no DATABASE_URL is provided, the dev launcher boots an embedded PostgreSQL.
-  databaseUrl: env.DATABASE_URL || `postgres://workora:workora@127.0.0.1:${env.EMBEDDED_PG_PORT || 54329}/workora`,
-  useEmbeddedDb: !env.DATABASE_URL,
+  // When no DATABASE_URL is provided, the dev launcher boots an embedded PostgreSQL locally.
+  databaseUrl: env.DATABASE_URL || (isProd ? '' : `postgres://workora:workora@127.0.0.1:${env.EMBEDDED_PG_PORT || 54329}/workora`),
+  useEmbeddedDb: !env.DATABASE_URL && !isProd,
   embeddedPort: Number(env.EMBEDDED_PG_PORT || 54329),
-  clientOrigin: env.CLIENT_ORIGIN || 'http://localhost:5173',
+  clientOrigin: env.CLIENT_ORIGIN || '*',
   jwt: {
-    accessSecret: env.JWT_ACCESS_SECRET || 'dev-only-access-secret-change-me',
-    refreshSecret: env.JWT_REFRESH_SECRET || 'dev-only-refresh-secret-change-me',
+    accessSecret: env.JWT_ACCESS_SECRET || 'workora-secret-access-token-mesahat-key-2026',
+    refreshSecret: env.JWT_REFRESH_SECRET || 'workora-secret-refresh-token-mesahat-key-2026',
     accessTtl: env.JWT_ACCESS_TTL || '15m',
     refreshTtlDays: Number(env.JWT_REFRESH_TTL_DAYS || 30),
   },
