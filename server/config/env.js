@@ -1,9 +1,16 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
+const projectRoot = path.resolve(root, '..');
+
+// Load environment variables from .env and .env.local (root and server)
+dotenv.config({ path: path.join(projectRoot, '.env') });
+dotenv.config({ path: path.join(projectRoot, '.env.local'), override: true });
+dotenv.config({ path: path.join(root, '.env'), override: true });
+dotenv.config({ path: path.join(root, '.env.local'), override: true });
 const env = process.env;
 
 const isProd = env.NODE_ENV === 'production';
