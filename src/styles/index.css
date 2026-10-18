@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  WORKORA design tokens                                              */
+/*  Deep forest green + copper on warm sand. Defined once, used by     */
+/*  every utility (bg-sand-100, text-brand-700, shadow-lift …).        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Alexandria Variable', 'Inter Variable', system-ui, sans-serif;
+  --font-latin: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --color-brand-50: #eef6f2;
+  --color-brand-100: #d5e8df;
+  --color-brand-200: #abd1c0;
+  --color-brand-300: #78b199;
+  --color-brand-400: #468f74;
+  --color-brand-500: #2b7358;
+  --color-brand-600: #225e49;
+  --color-brand-700: #1f4d3f;
+  --color-brand-800: #173b30;
+  --color-brand-900: #102a22;
+  --color-brand-950: #0a1d17;
+
+  --color-accent-50: #fdf6ec;
+  --color-accent-100: #fae8cf;
+  --color-accent-200: #f3d09f;
+  --color-accent-300: #e9b26b;
+  --color-accent-400: #dc9650;
+  --color-accent-500: #c9803a;
+  --color-accent-600: #b46f2e;
+  --color-accent-700: #96562a;
+
+  --color-sand-50: #fbf9f5;
+  --color-sand-100: #f5f1ea;
+  --color-sand-200: #eae2d5;
+  --color-sand-300: #dbd0bd;
+  --color-sand-400: #c4baaa;
+  --color-sand-500: #a39886;
+
+  --color-ink: #1b2420;
+
+  --radius-4xl: 2rem;
+
+  --shadow-soft: 0 1px 2px rgb(31 77 63 / 0.04), 0 4px 16px -4px rgb(31 77 63 / 0.08);
+  --shadow-lift: 0 2px 4px rgb(31 77 63 / 0.04), 0 16px 40px -12px rgb(31 77 63 / 0.22);
+  --shadow-glow: 0 0 0 1px rgb(31 77 63 / 0.08), 0 20px 60px -20px rgb(31 77 63 / 0.45);
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.35s ease both;
+  --animate-pop: pop 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 6s linear infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+}
+
+@layer base {
+  :root {
+    --primary: #1f4d3f;
+    --primary-hover: #16382e;
+    --accent: #c9803a;
+    color-scheme: light;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-sand-50);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  [dir='ltr'] body,
+  [dir='ltr'] html {
+    font-family: var(--font-latin);
+  }
+
+  /* Tailwind v4 dropped the default border colour — keep borders subtle. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-sand-200);
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  ::selection {
+    background: var(--color-brand-700);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-sand-300);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-400);
+    background-clip: content-box;
+    border: 2px solid transparent;
+  }
+
+  /* Numbers & codes read better left-to-right inside RTL text. */
+  .num { font-variant-numeric: tabular-nums; unicode-bidi: plaintext; }
+  input[type='date'], input[type='time'], input[type='number'], input[type='tel'], input[type='email'] {
+    font-family: var(--font-latin);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Component utilities                                                */
+/* ------------------------------------------------------------------ */
+@utility surface {
+  background: #fff;
+  border: 1px solid var(--color-sand-200);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility surface-hover {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s, border-color 0.25s;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--color-brand-200);
+  }
+}
+
+@utility glass-panel {
+  background: rgb(255 255 255 / 0.78);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgb(255 255 255 / 0.6);
+}
+
+@utility glass-dark {
+  background: rgb(16 42 34 / 0.78);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+@utility bg-grid-subtle {
+  background-size: 32px 32px;
+  background-image:
+    linear-gradient(to right, rgb(31 77 63 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(31 77 63 / 0.05) 1px, transparent 1px);
+}
+
+@utility bg-mesh {
+  background:
+    radial-gradient(60% 50% at 85% 0%, rgb(201 128 58 / 0.14) 0%, transparent 60%),
+    radial-gradient(55% 55% at 0% 10%, rgb(31 77 63 / 0.14) 0%, transparent 60%),
+    var(--color-sand-50);
+}
+
+@utility bg-brand-gradient {
+  background: linear-gradient(135deg, var(--color-brand-800) 0%, var(--color-brand-600) 100%);
+}
+
+@utility text-gradient-brand {
+  background: linear-gradient(120deg, var(--color-brand-700), var(--color-accent-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility skeleton {
+  background: linear-gradient(90deg, var(--color-sand-100) 25%, var(--color-sand-200) 37%, var(--color-sand-100) 63%);
+  background-size: 400% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: var(--radius-xl);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Staggered entrance helper: style={{ '--i': index }} */
+@utility stagger {
+  animation: var(--animate-fade-up);
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+/* FullCalendar — brand it once */
+.fc {
+  --fc-border-color: var(--color-sand-200);
+  --fc-button-bg-color: var(--color-brand-700);
+  --fc-button-border-color: var(--color-brand-700);
+  --fc-button-hover-bg-color: var(--color-brand-800);
+  --fc-button-hover-border-color: var(--color-brand-800);
+  --fc-button-active-bg-color: var(--color-brand-900);
+  --fc-button-active-border-color: var(--color-brand-900);
+  --fc-today-bg-color: rgb(201 128 58 / 0.08);
+  --fc-event-border-color: transparent;
+  font-size: 0.8rem;
+}
+.fc .fc-toolbar-title { font-size: 1rem; font-weight: 700; }
+.fc .fc-button { border-radius: 0.75rem; font-size: 0.75rem; font-weight: 600; text-transform: none; padding: 0.4rem 0.8rem; }
+.fc .fc-event { border-radius: 0.5rem; padding: 1px 4px; cursor: pointer; }
