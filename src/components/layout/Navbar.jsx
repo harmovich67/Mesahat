@@ -14,10 +14,10 @@ const SpaceMatchModal = lazy(() => import('../spaces/SpaceMatchModal').then((m) 
 export function Brand({ light = false }) {
   const lang = useLanguageStore((s) => s.lang);
   return (
-    <Link to="/" className="group flex items-center gap-2.5">
-      <span className="grid size-10 place-items-center rounded-xl bg-brand-gradient text-xl font-black text-white shadow-lg shadow-brand-700/25 transition-transform group-hover:scale-105 group-hover:-rotate-3">W</span>
+    <Link to="/" className="group flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <span className="grid size-8 sm:size-10 place-items-center rounded-xl bg-brand-gradient text-base sm:text-xl font-black text-white shadow-md sm:shadow-lg shadow-brand-700/25 transition-transform group-hover:scale-105 group-hover:-rotate-3">W</span>
       <span className="leading-tight">
-        <span className={cn('block text-lg font-extrabold tracking-tight', light ? 'text-white' : 'text-ink')}>WORKORA</span>
+        <span className={cn('block text-sm sm:text-lg font-extrabold tracking-tight', light ? 'text-white' : 'text-ink')}>WORKORA</span>
         <span className={cn('hidden whitespace-nowrap text-[11px] font-medium xl:block', light ? 'text-brand-200' : 'text-stone-500')}>{lang === 'ar' ? 'مساحتك للعمل. بطريقتك.' : 'Your space. Your way.'}</span>
       </span>
     </Link>
@@ -79,9 +79,9 @@ export function Navbar() {
 
   return (
     <>
-      <header className={cn('sticky top-0 z-40 transition-all duration-300', scrolled ? 'glass-panel border-b border-sand-200/80 py-2.5 shadow-soft' : 'border-b border-transparent bg-transparent py-4')}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-8">
+      <header className={cn('sticky top-0 z-40 w-full transition-all duration-300', scrolled ? 'glass-panel border-b border-sand-200/80 py-2 sm:py-2.5 shadow-soft' : 'border-b border-transparent bg-transparent py-2 sm:py-4')}>
+        <div className="mx-auto flex max-w-7xl w-full items-center justify-between gap-1.5 sm:gap-4 px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4 lg:gap-8 min-w-0 shrink-0">
             <Brand />
             <nav className="hidden items-center gap-1 lg:flex" aria-label="main">
               {links.map((l) => (
@@ -96,28 +96,28 @@ export function Navbar() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <button onClick={() => setSearchOpen(true)} className="hidden items-center gap-2.5 whitespace-nowrap rounded-xl border border-sand-200 bg-white/80 px-3.5 py-2 text-xs text-stone-500 transition-all hover:border-brand-300 hover:text-ink 2xl:flex" aria-label="search">
               <Search className="size-4" />
               <span className="w-32 text-start">{ar ? 'ابحث عن مساحة…' : 'Search spaces…'}</span>
               <kbd className="whitespace-nowrap rounded border border-sand-200 bg-sand-50 px-1.5 font-mono text-[10px]">Ctrl K</kbd>
             </button>
-            <button onClick={() => setSearchOpen(true)} className="grid size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 2xl:hidden" aria-label="search"><Search className="size-[18px]" /></button>
+            <button onClick={() => setSearchOpen(true)} className="grid size-8 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 2xl:hidden" aria-label="search"><Search className="size-4 sm:size-[18px]" /></button>
 
             <button onClick={() => setMatchOpen(true)} className="hidden items-center gap-1.5 whitespace-nowrap rounded-xl border border-accent-200 bg-accent-50 px-3 py-2 text-xs font-bold text-accent-700 transition-colors hover:bg-accent-100 md:flex">
               <Sparkles className="size-3.5" />
               {ar ? 'ساعدني أختار' : 'Match me'}
             </button>
 
-            <button onClick={toggleLang} className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-xs font-bold text-stone-600 transition-colors hover:bg-sand-100" title={ar ? 'Switch to English' : 'التحويل للعربية'}>
-              <Globe className="size-4" />
+            <button onClick={toggleLang} className="inline-flex items-center gap-1 rounded-xl px-2 sm:px-2.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-stone-600 transition-colors hover:bg-sand-100" title={ar ? 'Switch to English' : 'التحويل للعربية'}>
+              <Globe className="size-3.5 sm:size-4" />
               {ar ? 'EN' : 'ع'}
             </button>
 
             {isAuthenticated ? (
               <div className="relative" ref={userRef}>
-                <button onClick={() => setUserMenu((v) => !v)} className="flex items-center gap-2 rounded-xl border border-sand-200 bg-white p-1 pe-3 transition-colors hover:border-brand-300" aria-expanded={userMenu} aria-haspopup="menu">
-                  <Avatar name={user?.name} size="sm" />
+                <button onClick={() => setUserMenu((v) => !v)} className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-sand-200 bg-white p-0.5 sm:p-1 sm:pe-3 transition-colors hover:border-brand-300" aria-expanded={userMenu} aria-haspopup="menu">
+                  <Avatar name={user?.name} size="sm" className="size-7 sm:size-8 text-[11px] sm:text-xs rounded-lg sm:rounded-xl" />
                   <span className="hidden max-w-[110px] truncate text-xs font-bold text-ink sm:block">{user?.name?.split(' ')[0]}</span>
                 </button>
                 {userMenu && (
@@ -144,7 +144,7 @@ export function Navbar() {
               </div>
             )}
 
-            <button onClick={() => setMenu(true)} className="grid size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 lg:hidden" aria-label="menu"><Menu className="size-5" /></button>
+            <button onClick={() => setMenu(true)} className="grid size-8 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 lg:hidden" aria-label="menu"><Menu className="size-[18px] sm:size-5" /></button>
           </div>
         </div>
       </header>
@@ -166,7 +166,30 @@ export function Navbar() {
               ))}
               <button onClick={() => { setMenu(false); setMatchOpen(true); }} className="mt-2 flex w-full items-center gap-2 rounded-xl bg-accent-50 px-4 py-3 text-base font-bold text-accent-700"><Sparkles className="size-4" />{ar ? 'ساعدني أختار المساحة' : 'Match me with a space'}</button>
             </nav>
-            {!isAuthenticated && (
+            {isAuthenticated ? (
+              <div className="border-t border-sand-100 p-4 space-y-2">
+                <div className="flex items-center gap-3 px-2 py-1">
+                  <Avatar name={user?.name} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-ink">{user?.name}</p>
+                    <p className="truncate text-xs text-stone-500" dir="ltr">{user?.email}</p>
+                  </div>
+                </div>
+                <div className="pt-2 space-y-1">
+                  {isStaff && (
+                    <Link to="/admin" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-ink hover:bg-brand-50">
+                      <ShieldCheck className="size-4 text-brand-600" />{ar ? 'لوحة الإدارة' : 'Admin dashboard'}
+                    </Link>
+                  )}
+                  <Link to="/dashboard" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-ink hover:bg-brand-50">
+                    <LayoutDashboard className="size-4 text-brand-600" />{ar ? 'حسابي' : 'My account'}
+                  </Link>
+                  <button onClick={() => { setMenu(false); doLogout(); }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-start text-sm font-semibold text-rose-600 hover:bg-rose-50">
+                    <LogOut className="size-4" />{ar ? 'تسجيل الخروج' : 'Sign out'}
+                  </button>
+                </div>
+              </div>
+            ) : (
               <div className="grid grid-cols-2 gap-2 border-t border-sand-100 p-4">
                 <Link to="/login"><Button variant="outline" className="w-full">{ar ? 'دخول' : 'Sign in'}</Button></Link>
                 <Link to="/register"><Button className="w-full">{ar ? 'حساب جديد' : 'Register'}</Button></Link>
