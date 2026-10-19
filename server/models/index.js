@@ -50,6 +50,11 @@ const Setting = sequelize.define('Setting', {
   value: { type: T.JSONB, allowNull: false },
 }, { tableName: 'settings' });
 
+const Favorite = sequelize.define('Favorite', {
+  user_id: { type: T.UUID, primaryKey: true },
+  space_id: { type: T.UUID, primaryKey: true },
+}, { tableName: 'favorites', updatedAt: false });
+
 const StoredFile = sequelize.define('StoredFile', {
   id: id(),
   bucket: { type: T.STRING(40), allowNull: false },
