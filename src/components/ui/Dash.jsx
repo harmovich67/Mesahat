@@ -36,7 +36,7 @@ export function PageHeader({ title, description, icon: Icon, actions, className 
 
 export function Card({ children, className, padded = true, ...props }) {
   return (
-    <div className={cn('surface', padded && 'p-3.5 sm:p-6', className)} {...props}>
+    <div className={cn('surface min-w-0 max-w-full overflow-hidden', padded && 'p-3.5 sm:p-6', className)} {...props}>
       {children}
     </div>
   );

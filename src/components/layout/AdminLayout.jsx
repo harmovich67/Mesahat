@@ -363,7 +363,7 @@ export function AdminLayout() {
   );
 
   return (
-    <div className="flex min-h-screen bg-sand-50">
+    <div className="flex min-h-screen w-full max-w-full overflow-x-hidden bg-sand-50">
       {/* Desktop sidebar */}
       <aside
         className={cn(
@@ -418,10 +418,10 @@ export function AdminLayout() {
       </Dialog.Root>
 
       {/* Main */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="glass-panel sticky top-0 z-30 flex h-14 sm:h-16 items-center justify-between gap-2.5 sm:gap-3 border-b border-sand-200 px-3.5 sm:px-6">
+      <div className="flex min-w-0 w-full flex-1 flex-col overflow-x-hidden">
+        <header className="sticky top-0 z-30 flex h-14 sm:h-16 w-full items-center justify-between gap-2.5 sm:gap-3 border-b border-sand-200 bg-white/95 px-3.5 backdrop-blur-md sm:px-6">
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <button onClick={() => setDrawer(true)} className="grid size-9.5 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 lg:hidden" aria-label="menu">
+            <button onClick={() => setDrawer(true)} className="grid size-9 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 lg:hidden" aria-label="menu">
               <Menu className="size-5" />
             </button>
             <div className="min-w-0">
@@ -441,7 +441,7 @@ export function AdminLayout() {
               <span className="w-40 text-start">{lang === 'ar' ? 'بحث سريع…' : 'Quick search…'}</span>
               <kbd className="whitespace-nowrap rounded border border-sand-200 bg-sand-50 px-1.5 font-mono text-[10px]">Ctrl K</kbd>
             </button>
-            <button onClick={() => setSearchOpen(true)} className="grid size-9.5 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 md:hidden" aria-label="search">
+            <button onClick={() => setSearchOpen(true)} className="grid size-9 sm:size-10 place-items-center rounded-xl text-stone-600 hover:bg-sand-100 md:hidden" aria-label="search">
               <Search className="size-[18px]" />
             </button>
 
@@ -462,7 +462,7 @@ export function AdminLayout() {
           </div>
         </header>
 
-        <main key={location.pathname} className="mx-auto w-full max-w-[1400px] flex-1 animate-fade-in p-3.5 sm:p-6 lg:p-8">
+        <main key={location.pathname} className="mx-auto w-full max-w-[1400px] min-w-0 flex-1 animate-fade-in p-3.5 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

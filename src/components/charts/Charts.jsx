@@ -30,7 +30,7 @@ function ChartTooltip({ active, payload, label, format, labelFormat, name }) {
 export function AreaTrend({ data, xKey = 'date', yKey, format, labelFormat, tickFormat, color = CHART_COLORS[0], height = 240, name }) {
   const gid = `g-${yKey}-${color.slice(1)}`;
   return (
-    <div dir="ltr" style={{ height }} className="w-full">
+    <div dir="ltr" style={{ height }} className="w-full min-w-0 max-w-full overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 8, left: -14, bottom: 0 }}>
           <defs>
@@ -52,8 +52,8 @@ export function AreaTrend({ data, xKey = 'date', yKey, format, labelFormat, tick
 
 export function BarTrend({ data, xKey = 'date', yKey, format, labelFormat, tickFormat, color = CHART_COLORS[1], height = 220, name }) {
   return (
-    <div dir="ltr" style={{ height }} className="w-full">
-      <ResponsiveContainer>
+    <div dir="ltr" style={{ height }} className="w-full min-w-0 max-w-full overflow-hidden">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid stroke={GRID} strokeDasharray="3 4" vertical={false} />
           <XAxis dataKey={xKey} tick={{ fontSize: 11, fill: AXIS }} tickLine={false} axisLine={false} tickFormatter={tickFormat} minTickGap={24} />
@@ -72,9 +72,9 @@ export function Donut({ items, centerLabel, format = (v) => v, colors = CHART_CO
   const total = items.reduce((n, i) => n + i.value, 0);
   const current = active != null ? items[active] : null;
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative size-44 shrink-0" dir="ltr">
-        <ResponsiveContainer>
+    <div className="flex flex-col items-center gap-5 w-full min-w-0 max-w-full overflow-hidden">
+      <div className="relative size-44 shrink-0 mx-auto" dir="ltr">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={items}

@@ -55,7 +55,7 @@ export function AdminOverview() {
   const revenueTotal = chartData.reduce((n, x) => n + (x.revenue || 0), 0);
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full">
       <PageHeader
         title={`${greeting}، ${user?.name?.split(' ')[0] || ''}`}
         description={ar ? 'هذه لمحة سريعة عن أداء ووركورا اليوم. كل الأرقام مباشرة من قاعدة البيانات.' : 'A live snapshot of how WORKORA is performing today.'}
@@ -72,7 +72,7 @@ export function AdminOverview() {
       />
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4 w-full min-w-0">
         <StatCard
           index={0}
           loading={dash.isLoading}
@@ -113,7 +113,7 @@ export function AdminOverview() {
         />
       </div>
 
-      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3 w-full min-w-0">
         {/* Revenue */}
         <Card className="xl:col-span-2">
           <CardHeader
@@ -157,7 +157,7 @@ export function AdminOverview() {
         </Card>
       </div>
 
-      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3 w-full min-w-0">
         {/* Payment queue */}
         {canPayments && (
           <Card padded={false} className="xl:col-span-2">
@@ -233,7 +233,7 @@ export function AdminOverview() {
       </div>
 
       {canReports && (
-        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2 w-full min-w-0">
           <Card>
             <CardHeader title={ar ? 'المساحات الأكثر طلباً' : 'Top spaces'} description={ar ? 'حسب الإيراد في الفترة' : 'by revenue in range'} action={<Trophy className="size-5 text-accent-500" />} />
             {reports.isLoading ? (
