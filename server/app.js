@@ -41,9 +41,9 @@ export function createApp() {
   }));
 
   // Dynamic media handler for database-stored / S3 public files
-  app.get('/media/*', async (req, res, next) => {
+  app.get('/media/{*key}', async (req, res, next) => {
     try {
-      const key = req.params[0];
+      const key = Array.isArray(req.params.key) ? req.params.key.join('/') : String(req.params.key || '');
       if (!key) return next();
       const file = await storage.read('public', key);
       if (!file) return next();

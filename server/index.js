@@ -19,13 +19,15 @@ async function bootstrap() {
     console.log('[workora] embedded PostgreSQL ready');
   }
 
-  // 2. Migration & Schema Check
-  console.log('[workora] migrating database schema and constraints...');
-  await migrate();
-  console.log('[workora] database schema synchronized');
+  // 2. Migration & Schema Check (skip on Vercel to guarantee sub-second cold starts)
+  if (!process.env.VERCEL) {
+    console.log('[workora] migrating database schema and constraints...');
+    await migrate();
+    console.log('[workora] database schema synchronized');
 
-  // 3. Seed demo data
-  await seed();
+    // 3. Seed demo data
+    await seed();
+  }
 
   // 4. Start HTTP Server
   const app = createApp();
@@ -38,7 +40,7 @@ async function bootstrap() {
   });
 
   // 5. Background jobs
-  const stopJobs = startLifecycleJob();
+  const stopJobs = !process.env.VERCEL ? startLifecycleJob() : null;
 
   // Graceful shutdown
   const shutdown = async () => {
