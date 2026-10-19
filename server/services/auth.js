@@ -91,7 +91,7 @@ export const refreshCookieOptions = () => ({
   httpOnly: true,
   sameSite: 'lax',
   secure: config.isProd,
-  path: '/api/auth',
+  path: '/',
   maxAge: config.jwt.refreshTtlDays * 86_400_000,
 });
 

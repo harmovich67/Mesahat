@@ -32,7 +32,7 @@ export const config = {
   jwt: {
     accessSecret: env.JWT_ACCESS_SECRET || 'workora-secret-access-token-mesahat-key-2026',
     refreshSecret: env.JWT_REFRESH_SECRET || 'workora-secret-refresh-token-mesahat-key-2026',
-    accessTtl: env.JWT_ACCESS_TTL || '15m',
+    accessTtl: env.JWT_ACCESS_TTL || '7d',
     refreshTtlDays: Number(env.JWT_REFRESH_TTL_DAYS || 30),
   },
   storage: {

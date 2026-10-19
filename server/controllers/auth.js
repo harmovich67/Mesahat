@@ -16,13 +16,13 @@ export const refresh = async (req, res) => {
   try {
     await respond(res, await auth.refresh(req.cookies?.[REFRESH_COOKIE], req.headers['user-agent']));
   } catch (e) {
-    res.clearCookie(REFRESH_COOKIE, { path: '/api/auth' });
+    res.clearCookie(REFRESH_COOKIE, { path: '/' });
     throw e;
   }
 };
 export const logout = async (req, res) => {
   await auth.logout(req.cookies?.[REFRESH_COOKIE]);
-  res.clearCookie(REFRESH_COOKIE, { path: '/api/auth' });
+  res.clearCookie(REFRESH_COOKIE, { path: '/' });
   res.json({ ok: true });
 };
 export const me = async (req, res) => {
