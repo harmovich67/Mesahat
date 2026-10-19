@@ -55,14 +55,14 @@ export function AdminOverview() {
   const revenueTotal = chartData.reduce((n, x) => n + (x.revenue || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         title={`${greeting}، ${user?.name?.split(' ')[0] || ''}`}
         description={ar ? 'هذه لمحة سريعة عن أداء ووركورا اليوم. كل الأرقام مباشرة من قاعدة البيانات.' : 'A live snapshot of how WORKORA is performing today.'}
         actions={
           canPayments && (
-            <Link to="/admin/payments">
-              <Button variant="accent" icon={ShieldCheck} size="sm">
+            <Link to="/admin/payments" className="w-full sm:w-auto">
+              <Button variant="accent" icon={ShieldCheck} size="sm" className="w-full sm:w-auto justify-center">
                 {ar ? 'مراجعة المدفوعات' : 'Review payments'}
                 {d?.pending_payments > 0 && <span className="num ms-1 rounded-full bg-white/25 px-1.5 text-[11px]">{d.pending_payments}</span>}
               </Button>
@@ -72,7 +72,7 @@ export function AdminOverview() {
       />
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4">
         <StatCard
           index={0}
           loading={dash.isLoading}
@@ -113,7 +113,7 @@ export function AdminOverview() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3">
         {/* Revenue */}
         <Card className="xl:col-span-2">
           <CardHeader
@@ -157,11 +157,11 @@ export function AdminOverview() {
         </Card>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-3">
         {/* Payment queue */}
         {canPayments && (
           <Card padded={false} className="xl:col-span-2">
-            <div className="flex items-center justify-between px-5 pb-2 pt-5 sm:px-6">
+            <div className="flex items-center justify-between px-4 pb-2 pt-4 sm:px-6 sm:pt-5">
               <div>
                 <h3 className="text-base font-bold text-ink">{ar ? 'طابور مراجعة الدفع' : 'Payment review queue'}</h3>
                 <p className="text-xs text-stone-500">{ar ? 'الأقدم أولاً' : 'Oldest first'}</p>
@@ -171,15 +171,15 @@ export function AdminOverview() {
               </Link>
             </div>
             {queue.isLoading ? (
-              <div className="space-y-3 p-5">
+              <div className="space-y-3 p-4 sm:p-5">
                 {[0, 1, 2].map((i) => <Skeleton key={i} className="h-16" />)}
               </div>
             ) : queue.data?.items?.length ? (
               <ul className="divide-y divide-sand-100">
                 {queue.data.items.map((p) => (
                   <li key={p.id}>
-                    <button onClick={() => setReviewId(p.id)} className="flex w-full items-center gap-4 px-5 py-3.5 text-start transition-colors hover:bg-brand-50/50 sm:px-6">
-                      <Avatar name={p.booking?.customer?.name} />
+                    <button onClick={() => setReviewId(p.id)} className="flex w-full items-center gap-3 px-4 py-3 text-start transition-colors hover:bg-brand-50/50 sm:gap-4 sm:px-6 sm:py-3.5">
+                      <Avatar name={p.booking?.customer?.name} size="sm" className="sm:size-10" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-bold text-ink">{p.booking?.customer?.name}</p>
                         <p className="truncate text-xs text-stone-500">
@@ -208,21 +208,21 @@ export function AdminOverview() {
           {dash.isLoading ? (
             <Skeleton className="h-40" />
           ) : d?.upcoming?.length ? (
-            <ul className="space-y-3">
+            <ul className="space-y-2.5 sm:space-y-3">
               {d.upcoming.map((b) => (
-                <li key={b.id} className="flex items-start gap-3 rounded-xl border border-sand-100 p-3">
-                  <div className="grid w-12 shrink-0 place-items-center rounded-xl bg-brand-50 py-1.5 text-brand-700">
-                    <span className="num text-lg font-black leading-none">{new Date(b.start_at).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Africa/Cairo' })}</span>
-                    <span className="text-[10px] font-semibold">{formatDate(b.start_at, lang, { day: undefined, month: 'short', year: undefined })}</span>
+                <li key={b.id} className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-sand-100 p-2.5 sm:p-3">
+                  <div className="grid w-11 sm:w-12 shrink-0 place-items-center rounded-xl bg-brand-50 py-1 sm:py-1.5 text-brand-700">
+                    <span className="num text-base sm:text-lg font-black leading-none">{new Date(b.start_at).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Africa/Cairo' })}</span>
+                    <span className="text-[9px] sm:text-[10px] font-semibold">{formatDate(b.start_at, lang, { day: undefined, month: 'short', year: undefined })}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-ink">{getLocalized(b.space?.name, lang)}</p>
-                    <p className="truncate text-xs text-stone-500">{b.customer?.name}</p>
-                    <p className="num mt-0.5 flex items-center gap-1 text-[11px] text-stone-400">
-                      <Clock className="size-3" /> {formatTime(b.start_at, lang)} – {formatTime(b.end_at, lang)}
+                    <p className="truncate text-xs sm:text-sm font-bold text-ink">{getLocalized(b.space?.name, lang)}</p>
+                    <p className="truncate text-[11px] sm:text-xs text-stone-500">{b.customer?.name}</p>
+                    <p className="num mt-0.5 flex items-center gap-1 text-[10px] sm:text-[11px] text-stone-400">
+                      <Clock className="size-3 shrink-0" /> {formatTime(b.start_at, lang)} – {formatTime(b.end_at, lang)}
                     </p>
                   </div>
-                  <StatusBadge status={b.status} />
+                  <StatusBadge status={b.status} className="shrink-0 text-[10px] sm:text-[11px] px-2 py-0.5 sm:px-2.5 sm:py-1" />
                 </li>
               ))}
             </ul>
@@ -233,7 +233,7 @@ export function AdminOverview() {
       </div>
 
       {canReports && (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader title={ar ? 'المساحات الأكثر طلباً' : 'Top spaces'} description={ar ? 'حسب الإيراد في الفترة' : 'by revenue in range'} action={<Trophy className="size-5 text-accent-500" />} />
             {reports.isLoading ? (

@@ -32,7 +32,7 @@ export const useAuthStore = create((set, get) => ({
   token: initialToken,
   permissions: initialUser?.permissions || [],
   // While a stored session is being verified, route guards must wait instead of bouncing to /login.
-  isLoading: Boolean(initialToken),
+  isLoading: Boolean(initialToken || initialUser),
   isAuthenticated: Boolean(initialUser && initialToken),
   isStaff: checkIsStaff(initialUser),
 

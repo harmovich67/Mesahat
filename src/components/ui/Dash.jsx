@@ -17,26 +17,26 @@ export function useDebounced(value, delay = 350) {
 
 export function PageHeader({ title, description, icon: Icon, actions, className }) {
   return (
-    <div className={cn('flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
-      <div className="flex min-w-0 items-start gap-3.5">
+    <div className={cn('flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
+      <div className="flex min-w-0 items-start gap-3 sm:gap-3.5">
         {Icon && (
           <span className="mt-0.5 hidden size-11 shrink-0 place-items-center rounded-2xl bg-brand-gradient text-white shadow-soft sm:grid">
             <Icon className="size-5" />
           </span>
         )}
         <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold tracking-tight text-ink sm:text-[1.7rem]">{title}</h1>
-          {description && <p className="mt-1 max-w-2xl text-sm leading-relaxed text-stone-500">{description}</p>}
+          <h1 className="text-xl sm:text-[1.7rem] font-extrabold tracking-tight text-ink leading-tight">{title}</h1>
+          {description && <p className="mt-1 max-w-2xl text-xs sm:text-sm leading-relaxed text-stone-500">{description}</p>}
         </div>
       </div>
-      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
+      {actions && <div className="flex w-full sm:w-auto shrink-0 flex-wrap items-center gap-2">{actions}</div>}
     </div>
   );
 }
 
 export function Card({ children, className, padded = true, ...props }) {
   return (
-    <div className={cn('surface', padded && 'p-5 sm:p-6', className)} {...props}>
+    <div className={cn('surface', padded && 'p-3.5 sm:p-6', className)} {...props}>
       {children}
     </div>
   );
@@ -44,12 +44,12 @@ export function Card({ children, className, padded = true, ...props }) {
 
 export function CardHeader({ title, description, action, className }) {
   return (
-    <div className={cn('mb-4 flex items-start justify-between gap-3', className)}>
+    <div className={cn('mb-3.5 sm:mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between', className)}>
       <div className="min-w-0">
-        <h3 className="text-base font-bold text-ink">{title}</h3>
+        <h3 className="text-sm sm:text-base font-bold text-ink">{title}</h3>
         {description && <p className="mt-0.5 text-xs text-stone-500">{description}</p>}
       </div>
-      {action}
+      {action && <div className="shrink-0 w-full sm:w-auto">{action}</div>}
     </div>
   );
 }
@@ -74,39 +74,39 @@ export function StatCard({ label, value, hint, icon: Icon, tone = 'brand', delta
       onClick={onClick}
       style={{ '--i': index }}
       className={cn(
-        'surface stagger relative overflow-hidden p-5 text-start',
-        onClick && 'surface-hover w-full',
+        'surface stagger relative overflow-hidden p-3.5 sm:p-5 text-start transition-all',
+        onClick && 'surface-hover w-full cursor-pointer',
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <span className="text-xs font-semibold text-stone-500">{label}</span>
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
+        <div className="min-w-0 flex-1">
+          <span className="block truncate text-[11px] sm:text-xs font-semibold text-stone-500 leading-tight">{label}</span>
           {loading ? (
-            <Skeleton className="mt-2 h-8 w-28" />
+            <Skeleton className="mt-1.5 sm:mt-2 h-6 sm:h-8 w-20 sm:w-28" />
           ) : (
-            <div className="num mt-1 truncate whitespace-nowrap text-[1.4rem] font-extrabold leading-tight tracking-tight text-ink sm:text-[1.65rem]">{value}</div>
+            <div className="num mt-1 truncate text-base sm:text-[1.4rem] xl:text-[1.65rem] font-extrabold leading-tight tracking-tight text-ink">{value}</div>
           )}
         </div>
         {Icon && (
-          <span className={cn('grid size-11 shrink-0 place-items-center rounded-2xl', STAT_TONES[tone])}>
-            <Icon className="size-5" />
+          <span className={cn('grid size-8 sm:size-11 shrink-0 place-items-center rounded-xl sm:rounded-2xl', STAT_TONES[tone])}>
+            <Icon className="size-4 sm:size-5" />
           </span>
         )}
       </div>
       {(hint || delta != null) && !loading && (
-        <div className="mt-3 flex items-center gap-2 text-xs">
+        <div className="mt-2 sm:mt-3 flex flex-wrap items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs">
           {delta != null && (
             <span
               className={cn(
-                'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 font-bold num',
+                'inline-flex items-center gap-0.5 rounded-full px-1.5 sm:px-2 py-0.5 font-bold num text-[10px] sm:text-xs shrink-0',
                 flat ? 'bg-stone-100 text-stone-500' : good ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700',
               )}
             >
-              {flat ? <Minus className="size-3" /> : up ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}
+              {flat ? <Minus className="size-2.5 sm:size-3" /> : up ? <ArrowUpRight className="size-2.5 sm:size-3" /> : <ArrowDownRight className="size-2.5 sm:size-3" />}
               {Math.abs(Math.round(delta))}%
             </span>
           )}
-          {hint && <span className="truncate text-stone-500">{hint}</span>}
+          {hint && <span className="truncate text-stone-500 text-[10px] sm:text-xs">{hint}</span>}
         </div>
       )}
     </Tag>
@@ -118,7 +118,7 @@ export function Tabs({ options, value, onChange, className }) {
   return (
     <div
       role="tablist"
-      className={cn('scrollbar-none inline-flex max-w-full gap-1 overflow-x-auto rounded-2xl border border-sand-200 bg-sand-100/70 p-1', className)}
+      className={cn('scrollbar-none flex max-w-full gap-1 overflow-x-auto rounded-2xl border border-sand-200 bg-sand-100/70 p-1', className)}
     >
       {options.map((o) => {
         const active = o.value === value;
@@ -129,7 +129,7 @@ export function Tabs({ options, value, onChange, className }) {
             aria-selected={active}
             onClick={() => onChange(o.value)}
             className={cn(
-              'inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all',
+              'flex-1 sm:flex-initial justify-center inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-xl px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold transition-all',
               active ? 'bg-white text-brand-700 shadow-soft' : 'text-stone-500 hover:text-ink',
             )}
           >

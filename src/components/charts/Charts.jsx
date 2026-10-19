@@ -27,12 +27,12 @@ function ChartTooltip({ active, payload, label, format, labelFormat, name }) {
 }
 
 /** Single-series area trend. Title names the series, so no legend box. */
-export function AreaTrend({ data, xKey = 'date', yKey, format, labelFormat, tickFormat, color = CHART_COLORS[0], height = 260, name }) {
+export function AreaTrend({ data, xKey = 'date', yKey, format, labelFormat, tickFormat, color = CHART_COLORS[0], height = 240, name }) {
   const gid = `g-${yKey}-${color.slice(1)}`;
   return (
     <div dir="ltr" style={{ height }} className="w-full">
-      <ResponsiveContainer>
-        <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 8, right: 8, left: -14, bottom: 0 }}>
           <defs>
             <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={color} stopOpacity={0.28} />
@@ -40,8 +40,8 @@ export function AreaTrend({ data, xKey = 'date', yKey, format, labelFormat, tick
             </linearGradient>
           </defs>
           <CartesianGrid stroke={GRID} strokeDasharray="3 4" vertical={false} />
-          <XAxis dataKey={xKey} tick={{ fontSize: 11, fill: AXIS }} tickLine={false} axisLine={false} tickFormatter={tickFormat} minTickGap={24} />
-          <YAxis tick={{ fontSize: 11, fill: AXIS }} tickLine={false} axisLine={false} width={44} tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : v)} allowDecimals={false} />
+          <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: AXIS }} tickLine={false} axisLine={false} tickFormatter={tickFormat} minTickGap={16} />
+          <YAxis tick={{ fontSize: 10, fill: AXIS }} tickLine={false} axisLine={false} width={40} tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : v)} allowDecimals={false} />
           <Tooltip cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '3 3' }} content={<ChartTooltip format={format} labelFormat={labelFormat} name={name} />} />
           <Area type="monotone" dataKey={yKey} stroke={color} strokeWidth={2} fill={`url(#${gid})`} activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }} />
         </AreaChart>
