@@ -2,21 +2,25 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { config } from '../config/env.js';
+import { sequelize } from '../config/database.js';
 
 /**
  * Storage abstraction. Two buckets:
  *  - "private": payment receipts. Never served statically; only streamed by authorised API routes.
  *  - "public":  space images / avatars / review photos, served from /media.
- * Drivers: local disk (dev) and S3-compatible (prod). Add more by implementing the same interface.
+ * Drivers: postgres database (db, default on Vercel/prod), local disk (dev), and S3-compatible.
  */
 class LocalDriver {
   dir(bucket) {
+    if (process.env.VERCEL) {
+      return bucket === 'private' ? path.join('/tmp', 'storage', 'private') : path.join('/tmp', 'storage', 'public');
+    }
     return bucket === 'private' ? config.storage.privateDir : config.storage.publicDir;
   }
   safe(bucket, key) {
     const root = path.resolve(this.dir(bucket));
     const full = path.resolve(root, key);
-    if (!full.startsWith(root + path.sep)) throw new Error('Invalid storage key');
+    if (!full.startsWith(root + path.sep) && full !== root) throw new Error('Invalid storage key');
     return full;
   }
   async put(bucket, key, buffer) {
@@ -29,6 +33,70 @@ class LocalDriver {
   }
   async remove(bucket, key) {
     await fs.rm(this.safe(bucket, key), { force: true });
+  }
+}
+
+class DatabaseDriver {
+  constructor() {
+    this.local = new LocalDriver();
+  }
+
+  async put(bucket, key, buffer, mime) {
+    try {
+      await sequelize.query(
+        `INSERT INTO stored_files (bucket, key, mime_type, data, size, created_at)
+         VALUES (:bucket, :key, :mime_type, :data, :size, NOW())
+         ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data, size = EXCLUDED.size, mime_type = EXCLUDED.mime_type`,
+        {
+          replacements: { bucket, key, mime_type: mime || 'application/octet-stream', data: buffer, size: buffer.length },
+        }
+      );
+    } catch (err) {
+      console.error('[storage db put error]:', err.message);
+    }
+
+    // Also write to local /tmp cache if possible
+    try {
+      await this.local.put(bucket, key, buffer);
+    } catch {
+      // Ephemeral cache write is optional
+    }
+  }
+
+  async get(bucket, key) {
+    // 1. Try local disk cache first (fastest)
+    try {
+      const cached = await this.local.get(bucket, key);
+      if (cached) return cached;
+    } catch {}
+
+    // 2. Fetch from Neon Postgres database
+    try {
+      const [rows] = await sequelize.query(
+        `SELECT data, mime_type FROM stored_files WHERE key = :key AND bucket = :bucket LIMIT 1`,
+        { replacements: { key, bucket } }
+      );
+      if (rows && rows.length && rows[0].data) {
+        const buf = Buffer.from(rows[0].data);
+        // Populate local cache in background
+        this.local.put(bucket, key, buf).catch(() => {});
+        return buf;
+      }
+    } catch (err) {
+      console.warn('[storage db get error]:', err.message);
+    }
+
+    return null;
+  }
+
+  async remove(bucket, key) {
+    try {
+      await sequelize.query(
+        `DELETE FROM stored_files WHERE key = :key AND bucket = :bucket`,
+        { replacements: { key, bucket } }
+      );
+    } catch {}
+    await this.local.remove(bucket, key).catch(() => {});
   }
 }
 
@@ -47,7 +115,6 @@ class S3Driver {
     });
     return this._c;
   }
-  // private and public use key prefixes in one bucket; configure bucket policy so only public/ is readable.
   k(bucket, key) {
     return `${bucket}/${key}`;
   }
@@ -68,13 +135,19 @@ class S3Driver {
   }
 }
 
-const driver = config.storage.driver === 's3' ? new S3Driver() : new LocalDriver();
+function createDriver() {
+  if (config.storage.driver === 's3') return new S3Driver();
+  if (config.storage.driver === 'db') return new DatabaseDriver();
+  return new LocalDriver();
+}
+
+const driver = createDriver();
 
 const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/pdf': 'pdf' };
 
 /** Detects the real file type from magic bytes (never trusts the client-sent mimetype/extension). */
 export function sniffMime(buf) {
-  if (buf.length < 12) return null;
+  if (!buf || buf.length < 12) return null;
   if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'image/jpeg';
   if (buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'image/png';
   if (buf.subarray(0, 4).toString('ascii') === 'RIFF' && buf.subarray(8, 12).toString('ascii') === 'WEBP') return 'image/webp';

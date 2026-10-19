@@ -6,6 +6,7 @@ import path from 'node:path';
 import { config } from './config/env.js';
 import { api } from './routes/index.js';
 import { errorHandler, notFound, apiLimiter } from './middleware/index.js';
+import { storage, sniffMime } from './storage/index.js';
 
 export function createApp() {
   const app = express();
@@ -38,6 +39,22 @@ export function createApp() {
     maxAge: '7d',
     fallthrough: true,
   }));
+
+  // Dynamic media handler for database-stored / S3 public files
+  app.get('/media/*', async (req, res, next) => {
+    try {
+      const key = req.params[0];
+      if (!key) return next();
+      const file = await storage.read('public', key);
+      if (!file) return next();
+      const mime = sniffMime(file) || 'image/jpeg';
+      res.setHeader('Content-Type', mime);
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.send(file);
+    } catch {
+      next();
+    }
+  });
 
   // Serve static public/images from project root if needed
   const rootImages = path.resolve(config.root, '..', 'public', 'images');

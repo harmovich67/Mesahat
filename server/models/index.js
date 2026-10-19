@@ -50,12 +50,16 @@ const Setting = sequelize.define('Setting', {
   value: { type: T.JSONB, allowNull: false },
 }, { tableName: 'settings' });
 
-const Favorite = sequelize.define('Favorite', {
-  user_id: { type: T.UUID, primaryKey: true },
-  space_id: { type: T.UUID, primaryKey: true },
-}, { tableName: 'favorites', updatedAt: false });
+const StoredFile = sequelize.define('StoredFile', {
+  id: id(),
+  bucket: { type: T.STRING(40), allowNull: false },
+  key: { type: T.STRING(300), allowNull: false, unique: true },
+  mime_type: { type: T.STRING(80), allowNull: false },
+  data: { type: T.BLOB('long'), allowNull: false },
+  size: { type: T.INTEGER, allowNull: false },
+}, { tableName: 'stored_files', updatedAt: false, indexes: [{ fields: ['key'] }, { fields: ['bucket'] }] });
 
-export const models = { ...identity, ...catalog, ...booking, Review, Notification, AuditLog, Setting, Favorite };
+export const models = { ...identity, ...catalog, ...booking, Review, Notification, AuditLog, Setting, Favorite, StoredFile };
 const m = models;
 
 // Identity

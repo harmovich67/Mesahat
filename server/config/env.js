@@ -36,11 +36,11 @@ export const config = {
     refreshTtlDays: Number(env.JWT_REFRESH_TTL_DAYS || 30),
   },
   storage: {
-    driver: env.STORAGE_DRIVER || 'local', // local | s3
+    driver: env.STORAGE_DRIVER || (env.S3_BUCKET ? 's3' : (isProd || env.DATABASE_URL ? 'db' : 'local')), // db | local | s3
     // Receipts live in a PRIVATE directory that is never served statically.
-    privateDir: env.PRIVATE_STORAGE_DIR || path.join(root, 'storage', 'private'),
+    privateDir: env.PRIVATE_STORAGE_DIR || (process.env.VERCEL ? path.join('/tmp', 'storage', 'private') : path.join(root, 'storage', 'private')),
     // Public media (space images, avatars, review photos). Served at /media.
-    publicDir: env.PUBLIC_STORAGE_DIR || path.join(root, 'storage', 'public'),
+    publicDir: env.PUBLIC_STORAGE_DIR || (process.env.VERCEL ? path.join('/tmp', 'storage', 'public') : path.join(root, 'storage', 'public')),
     s3: {
       bucket: env.S3_BUCKET,
       region: env.S3_REGION || 'auto',
