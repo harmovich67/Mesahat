@@ -1,17 +1,52 @@
 {
-  "version": 2,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "framework": "vite"
+    },
+    "server": {
+      "root": "server",
+      "framework": "express"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "destination": {
+        "service": "server"
+      }
     },
     {
       "source": "/media/(.*)",
-      "destination": "/api/index.js"
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/images/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/favicon.(ico|svg)",
+      "destination": {
+        "service": "app"
+      }
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": {
+        "service": "app",
+        "path": "/index.html"
+      }
     }
   ]
 }
