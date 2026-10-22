@@ -139,23 +139,23 @@ export function BookingWidget({ space }) {
   const priceFrom = space.from_price != null ? space.from_price : null;
 
   return (
-    <div className="surface overflow-hidden shadow-lift">
-      <div className="bg-brand-gradient relative overflow-hidden p-6 text-white">
-        <div className="absolute -end-10 -top-10 size-40 rounded-full bg-white/10 blur-2xl" />
+    <div className="surface w-full max-w-full overflow-hidden shadow-lift">
+      <div className="bg-brand-gradient relative overflow-hidden p-4 sm:p-6 text-white">
+        <div className="pointer-events-none absolute -end-10 -top-10 size-40 rounded-full bg-white/10 blur-2xl" />
         <div className="relative flex items-center justify-between text-xs font-bold text-brand-100">
           <span>{ar ? 'احجز الآن' : 'Book now'}</span>
-          <span className="inline-flex items-center gap-1.5 text-accent-300"><ShieldCheck className="size-4" />{ar ? 'تأكيد خلال دقائق' : 'Fast confirmation'}</span>
+          <span className="inline-flex items-center gap-1.5 text-accent-300"><ShieldCheck className="size-4 shrink-0" />{ar ? 'تأكيد خلال دقائق' : 'Fast confirmation'}</span>
         </div>
         {priceFrom != null && (
-          <div className="relative mt-2 flex items-baseline gap-2">
+          <div className="relative mt-2 flex flex-wrap items-baseline gap-2">
             <span className="text-xs text-brand-200">{ar ? 'تبدأ من' : 'from'}</span>
-            <span className="num text-3xl font-black tracking-tight">{formatEGP(priceFrom, lang)}</span>
+            <span className="num text-2xl sm:text-3xl font-black tracking-tight">{formatEGP(priceFrom, lang)}</span>
             <span className="text-sm text-brand-200">/ {unitLabel(space.from_unit, lang)}</span>
           </div>
         )}
       </div>
 
-      <div className="space-y-6 p-6">
+      <div className="space-y-5 p-4 sm:space-y-6 sm:p-6">
         {units.length > 1 && (
           <div>
             <Label>{ar ? 'نوع الحجز' : 'Booking type'}</Label>
@@ -225,16 +225,47 @@ export function BookingWidget({ space }) {
               {addonList.map((a) => {
                 const q = addons[a.id] || 0;
                 return (
-                  <li key={a.id} className={cn('flex items-center justify-between gap-3 rounded-xl border-2 p-3 transition-all', q ? 'border-brand-500 bg-brand-50/50' : 'border-sand-200')}>
-                    <button className="min-w-0 flex-1 text-start" onClick={() => setAddons((c) => ({ ...c, [a.id]: q ? 0 : 1 }))} aria-pressed={q > 0}>
-                      <span className="flex items-center gap-2 text-sm font-bold text-ink">{q > 0 && <Check className="size-4 text-brand-600" />}<span className="truncate">{getLocalized(a.name, lang)}</span></span>
-                      <span className="num text-xs text-stone-500">{formatEGP(a.price, lang)} {MODE_LABEL[a.pricing_mode]?.[lang]}</span>
+                  <li
+                    key={a.id}
+                    className={cn(
+                      'flex min-w-0 items-center justify-between gap-2 sm:gap-3 rounded-xl border-2 p-2.5 sm:p-3 transition-all',
+                      q ? 'border-brand-500 bg-brand-50/50' : 'border-sand-200'
+                    )}
+                  >
+                    <button
+                      type="button"
+                      className="min-w-0 flex-1 text-start"
+                      onClick={() => setAddons((c) => ({ ...c, [a.id]: q ? 0 : 1 }))}
+                      aria-pressed={q > 0}
+                    >
+                      <span className="flex min-w-0 items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-ink">
+                        {q > 0 && <Check className="size-4 shrink-0 text-brand-600" />}
+                        <span className="truncate">{getLocalized(a.name, lang)}</span>
+                      </span>
+                      <span className="num block text-[11px] sm:text-xs text-stone-500">
+                        {formatEGP(a.price, lang)} {MODE_LABEL[a.pricing_mode]?.[lang]}
+                      </span>
                     </button>
                     {q > 0 && a.max_quantity > 1 && (
-                      <span className="flex items-center gap-1">
-                        <button onClick={() => setAddon(a, -1)} className="grid size-7 place-items-center rounded-lg bg-white text-ink shadow-soft" aria-label="-"><Minus className="size-3.5" /></button>
-                        <span className="num w-5 text-center text-sm font-bold">{q}</span>
-                        <button onClick={() => setAddon(a, 1)} disabled={q >= a.max_quantity} className="grid size-7 place-items-center rounded-lg bg-white text-ink shadow-soft disabled:opacity-40" aria-label="+"><Plus className="size-3.5" /></button>
+                      <span className="flex shrink-0 items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setAddon(a, -1)}
+                          className="grid size-7 place-items-center rounded-lg bg-white text-ink shadow-soft"
+                          aria-label="-"
+                        >
+                          <Minus className="size-3.5" />
+                        </button>
+                        <span className="num w-5 text-center text-xs sm:text-sm font-bold">{q}</span>
+                        <button
+                          type="button"
+                          onClick={() => setAddon(a, 1)}
+                          disabled={q >= a.max_quantity}
+                          className="grid size-7 place-items-center rounded-lg bg-white text-ink shadow-soft disabled:opacity-40"
+                          aria-label="+"
+                        >
+                          <Plus className="size-3.5" />
+                        </button>
                       </span>
                     )}
                   </li>
@@ -255,22 +286,43 @@ export function BookingWidget({ space }) {
         </div>
 
         {/* Quote */}
-        <div className="rounded-2xl bg-sand-50 p-4">
+        <div className="rounded-2xl bg-sand-50 p-3.5 sm:p-4">
           {!ready ? (
             <p className="text-center text-sm text-stone-500">{ar ? 'اختر الموعد لعرض السعر' : 'Pick a time to see the price'}</p>
           ) : quoteError && !couponError ? (
-            <p className="flex items-start gap-2 text-sm font-semibold text-rose-700"><AlertCircle className="mt-0.5 size-4 shrink-0" />{quoteError.message}</p>
+            <p className="flex items-start gap-2 text-sm font-semibold text-rose-700">
+              <AlertCircle className="mt-0.5 size-4 shrink-0" />
+              <span className="min-w-0 break-words">{quoteError.message}</span>
+            </p>
           ) : quote ? (
-            <div className={cn('space-y-2 text-sm transition-opacity', quoteQ.isFetching && 'opacity-50')}>
-              <div className="flex justify-between text-stone-600"><span>{quote.base.quantity > 1 || quote.unit === 'hourly' ? `${unitLabel(quote.unit, lang)} × ${quote.base.quantity}` : unitLabel(quote.unit, lang)}</span><span className="num font-semibold">{formatEGP(quote.base_amount, lang)}</span></div>
-              {quote.addons?.map((a) => <div key={a.add_on_id} className="flex justify-between text-stone-600"><span>{getLocalized(a.name, lang)} × {a.quantity}</span><span className="num font-semibold">{formatEGP(a.total, lang)}</span></div>)}
-              {quote.discount_amount > 0 && <div className="flex justify-between text-emerald-700"><span>{ar ? 'خصم' : 'Discount'} {quote.coupon_code}</span><span className="num font-semibold">−{formatEGP(quote.discount_amount, lang)}</span></div>}
-              {quote.tax_amount > 0 && <div className="flex justify-between text-stone-600"><span>{ar ? 'الضريبة' : 'VAT'}</span><span className="num font-semibold">{formatEGP(quote.tax_amount, lang)}</span></div>}
-              <div className="flex items-end justify-between border-t border-sand-200 pt-3">
-                <span className="font-bold text-ink">{ar ? 'الإجمالي' : 'Total'}</span>
-                <span className="num text-2xl font-black tracking-tight text-brand-700">{formatEGP(quote.final_amount, lang)}</span>
+            <div className={cn('space-y-2 text-xs sm:text-sm transition-opacity', quoteQ.isFetching && 'opacity-50')}>
+              <div className="flex items-center justify-between gap-2 text-stone-600">
+                <span className="min-w-0 truncate">{quote.base.quantity > 1 || quote.unit === 'hourly' ? `${unitLabel(quote.unit, lang)} × ${quote.base.quantity}` : unitLabel(quote.unit, lang)}</span>
+                <span className="num shrink-0 font-semibold">{formatEGP(quote.base_amount, lang)}</span>
               </div>
-              <p className="num text-center text-[11px] text-stone-400">{formatTime(quote.start_at, lang)} → {formatTime(quote.end_at, lang)}</p>
+              {quote.addons?.map((a) => (
+                <div key={a.add_on_id} className="flex items-center justify-between gap-2 text-stone-600">
+                  <span className="min-w-0 truncate">{getLocalized(a.name, lang)} × {a.quantity}</span>
+                  <span className="num shrink-0 font-semibold">{formatEGP(a.total, lang)}</span>
+                </div>
+              ))}
+              {quote.discount_amount > 0 && (
+                <div className="flex items-center justify-between gap-2 text-emerald-700">
+                  <span className="min-w-0 truncate">{ar ? 'خصم' : 'Discount'} {quote.coupon_code}</span>
+                  <span className="num shrink-0 font-semibold">−{formatEGP(quote.discount_amount, lang)}</span>
+                </div>
+              )}
+              {quote.tax_amount > 0 && (
+                <div className="flex items-center justify-between gap-2 text-stone-600">
+                  <span className="min-w-0 truncate">{ar ? 'الضريبة' : 'VAT'}</span>
+                  <span className="num shrink-0 font-semibold">{formatEGP(quote.tax_amount, lang)}</span>
+                </div>
+              )}
+              <div className="flex items-end justify-between gap-2 border-t border-sand-200 pt-3">
+                <span className="font-bold text-ink">{ar ? 'الإجمالي' : 'Total'}</span>
+                <span className="num shrink-0 text-xl sm:text-2xl font-black tracking-tight text-brand-700">{formatEGP(quote.final_amount, lang)}</span>
+              </div>
+              <p className="num text-center text-[11px] text-stone-400 break-words">{formatTime(quote.start_at, lang)} → {formatTime(quote.end_at, lang)}</p>
             </div>
           ) : (
             <div className="flex justify-center py-2"><Spinner /></div>
@@ -281,7 +333,7 @@ export function BookingWidget({ space }) {
           {isAuthenticated ? (ar ? 'احجز وانتقل للدفع' : 'Reserve & continue to payment') : ar ? 'سجّل الدخول للحجز' : 'Sign in to book'}
         </Button>
         <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-stone-500">
-          <Timer className="size-3.5" />
+          <Timer className="size-3.5 shrink-0" />
           {ar ? `نحجز لك المساحة ${holdMin} دقيقة لإتمام الدفع` : `We hold the slot for ${holdMin} minutes while you pay`}
         </p>
       </div>

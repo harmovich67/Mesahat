@@ -264,7 +264,7 @@ export function SpaceDetail() {
             </Card>
           </div>
 
-          <aside className="lg:sticky lg:top-24">
+          <aside className="min-w-0 w-full lg:sticky lg:top-24">
             <BookingWidget key={space.id} space={space} />
           </aside>
         </div>
